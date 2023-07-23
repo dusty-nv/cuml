@@ -227,8 +227,12 @@ fi
 # Configure for building all C++ targets
 if completeBuild || hasArg libcuml || hasArg prims || hasArg bench || hasArg prims-bench || hasArg cppdocs || hasArg cpp-mgtests; then
     if (( ${BUILD_ALL_GPU_ARCH} == 0 )); then
-        CUML_CMAKE_CUDA_ARCHITECTURES="NATIVE"
-        echo "Building for the architecture of the GPU in the system..."
+	   CUML_CMAKE_CUDA_ARCHITECTURES="${CUML_CMAKE_CUDA_ARCHITECTURES:-NATIVE}"
+        if [[ "$CUML_CMAKE_CUDA_ARCHITECTURES" == "NATIVE" ]]; then
+            echo "Building for the architecture of the GPU in the system..."
+        else
+            echo "Building for the GPU architecture(s) $CUML_CMAKE_CUDA_ARCHITECTURES ..."
+        fi
     else
         CUML_CMAKE_CUDA_ARCHITECTURES="ALL"
         echo "Building for *ALL* supported GPU architectures..."
